@@ -119,7 +119,7 @@ def decode(H, x):
     step = np.zeros(n)
     u_hat = np.zeros(n)
     dist[k] = 0  # Distance to current layer
-    e[k] = np.dot(x, H)  # Compute ek = H^{-1} * x
+    e[k] = np.dot(x, H)  # Compute ek
     u[k] = np.round(e[k][k]).astype(int)  # Get closest lattice point in integer space
     y = (e[k][k] - u[k]) / H[k][k]  # Calculate the residual error vector
 
