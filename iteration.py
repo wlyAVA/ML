@@ -167,10 +167,10 @@ def compute_NSM(B):
         x = z @ B
         u = CLP(B, x)
         e = (z - u) @ B
-        pro = np.linalg.norm(e)
+        pro = np.linalg.norm(e) ** 2
         norm.append(pro)
     mean = np.mean(norm)
-    return (1 / n * V ** (-2 / n)) * mean
+    return mean / (n * (V ** (2 / n)))
 
 
 # the param can be changed
