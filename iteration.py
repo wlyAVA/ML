@@ -111,7 +111,7 @@ def decode(H, x):
     :return: the closest point of x, (1,n)
     """
     n = H.shape[0]  # Matrix dimension
-    bestdist = np.inf  # Current best distance (initialized to infinity)
+    bestdist = np.inf
     k = n - 1  # Start at the top layer
     dist = np.zeros(n)
     e = np.zeros((n, n))
@@ -120,34 +120,34 @@ def decode(H, x):
     u_hat = np.zeros(n)
     dist[k] = 0  # Distance to current layer
     e[k] = np.dot(x, H)  # Compute ek
-    u[k] = np.round(e[k][k]).astype(int)  # Get closest lattice point in integer space
-    y = (e[k][k] - u[k]) / H[k][k]  # Calculate the residual error vector
+    u[k] = np.round(e[k][k]).astype(int)
+    y = (e[k][k] - u[k]) / H[k][k] 
 
-    step[k] = sign(y)  # Step direction for the next layer
+    step[k] = sign(y)
 
     while True:
-        newdist = dist[k] + y ** 2  # Calculate new distance
+        newdist = dist[k] + y ** 2
 
-        if newdist < bestdist:  # If we found a closer lattice point
+        if newdist < bestdist:
             if k != 0:  # Case A: Move down to the previous layer
                 for i in range(0, k):
                     e[k - 1][i] = e[k][i] - y * H[k][i]
                 k -= 1  # Move down in the layer structure
                 dist[k] = newdist
-                u[k] = np.round(e[k][k]).astype(int)  # Closest lattice point
+                u[k] = np.round(e[k][k]).astype(int)
                 y = (e[k][k] - u[k]) / H[k][k]
                 step[k] = sign(y)
             else:  # Case B: Found the best lattice point so far, update and move up
-                u_hat = u.astype(int)  # Store the current best lattice point
-                bestdist = newdist  # Update the best distance found
+                u_hat = u.astype(int)
+                bestdist = newdist  # Update
                 k += 1  # Move up
-                u[k] = u[k] + step[k]  # Adjust the current layer's lattice point
+                u[k] = u[k] + step[k]
                 y = (e[k][k] - u[k]) / H[k][k]
                 step[k] = -step[k] - sign(step[k])
         else:  # Case C: No improvement found, move up
-            if k == n - 1:  # If at the top layer, return the solution
+            if k == n - 1:
                 return u_hat
-            else:  # Otherwise, move up and adjust the layer's lattice point
+            else:
                 k += 1
                 u[k] = u[k] + step[k]
                 y = (e[k][k] - u[k]) / H[k][k]
