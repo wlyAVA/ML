@@ -101,8 +101,11 @@ Final NSM: ...
 ## 参考文献
 
  **Optimization and Identification of Lattice Quantizers** 
+ 
  **On the Best Lattice Quantizers** 
+ 
  **Closest point search in lattices** 
+ 
  **Faster Recursions in Sphere Decoding**
 
 ## 小组分工
