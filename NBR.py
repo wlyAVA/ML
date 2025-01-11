@@ -9,53 +9,53 @@ def decode(H,ep):
     :return: the closest point of x, (1,n)
     """
     n = H.shape[0]  # Matrix dimension
-    bestdist = np.inf  # Current best distance (initialized to infinity)
-    k = n - 1  # Start at the top layer
+    bestdist = np.inf
+    k = n - 1
     dist = np.zeros(n)
     e = np.zeros((n, n))
     u = np.zeros(n)
     step = np.zeros(n)
     u_hat = []
-    dist[k] = 0  # Distance to current layer
-    # e[k] = 0  # Compute ek = H^{-1} * x
-    u[k] = np.round(e[k][k]).astype(int)  # Get closest lattice point in integer space
-    y = (e[k][k] - u[k]) / H[k][k]  # Calculate the residual error vector
+    dist[k] = 0
+    # e[k] = 0
+    u[k] = np.round(e[k][k]).astype(int)
+    y = (e[k][k] - u[k]) / H[k][k]
 
-    step[k] = iteration.sign(y)  # Step direction for the next layer
+    step[k] = iteration.sign(y)
 
     while True:
-        newdist = dist[k] + y ** 2  # Calculate new distance
+        newdist = dist[k] + y ** 2
 
-        if newdist < (1 + ep) * bestdist:  # If we found a closer lattice point
-            if k != 0:  # Case A: Move down to the previous layer
+        if newdist < (1 + ep) * bestdist:
+            if k != 0:
                 for i in range(0, k):
                     e[k - 1][i] = e[k][i] - y * H[k][i]
-                k -= 1  # Move down in the layer structure
+                k -= 1
                 dist[k] = newdist
-                u[k] = np.round(e[k][k]).astype(int)  # Closest lattice point
+                u[k] = np.round(e[k][k]).astype(int)
                 y = (e[k][k] - u[k]) / H[k][k]
                 step[k] = iteration.sign(y)
-            else:  # Case B: Found the best lattice point so far, update and move up
+            else:
                 if newdist != 0:
                     if not any(np.array_equal(u,x) for x in u_hat):
                         # print(u_hat)
                         u_hat.append(u.copy())
                         # print(u_hat)
                     bestdist = min(bestdist, newdist)
-                # k += 1  # Move up
-                u[k] = u[k] + step[k]  # Adjust the current layer's lattice point
+                # k += 1
+                u[k] = u[k] + step[k]
                 y = (e[k][k] - u[k]) / H[k][k]
                 step[k] = -step[k] - iteration.sign(step[k])
-        else:  # Case C: No improvement found, move up
-            if k == n - 1:  # If at the top layer, return the solution
+        else:
+            if k == n - 1:
                 return u_hat
-            else:  # Otherwise, move up and adjust the layer's lattice point
+            else:
                 k += 1
                 u[k] = u[k] + step[k]
                 y = (e[k][k] - u[k]) / H[k][k]
                 step[k] = -step[k] - iteration.sign(step[k])
 
-
+# 调用decode时选择的ep参数应该根据B和r的大小更改。此函数在维度大或者ep参数选择不当时只能计算出下界或计算时间过长。
 def compute_NBR(B, r):
     U = decode(np.linalg.inv(B),4)
     x=np.zeros(np.array(B).shape[0])
