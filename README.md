@@ -97,3 +97,10 @@ Final NSM: ...
 ## 结论
 
 本次实验主要分析并实现了参考论文中提出的对于格量化器的数值优化方法，计算出了2-16维的格型数据，并对计算结果进行了分析。
+
+## 参考文献
+
+**Optimization and Identification of Lattice Quantizers**、**On the Best Lattice Quantizers**、**Closest point search in lattices**、**Faster Recursions in Sphere Decoding**
+
+## 小组分工
+
